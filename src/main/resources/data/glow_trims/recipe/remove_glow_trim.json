@@ -1,0 +1,5 @@
+{
+    "type": "glow_trims:glow_trim",
+    "addition": "ink_sac",
+    "base": "#minecraft:trimmable_armor"
+}

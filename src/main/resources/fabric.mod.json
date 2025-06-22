@@ -1,0 +1,35 @@
+{
+    "schemaVersion": 1,
+    "id": "glow_trims",
+    "version": "${version}",
+    "name": "Glow Trims",
+    "description": "",
+    "authors": ["TorNato"],
+    "contact": {},
+    "license": "MIT",
+    "icon": "assets/glow_trims/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "fabric-datagen": [
+            "tornato.glow_trims.client.GlowTrimsDatagen"
+        ],
+        "client": [
+            "tornato.glow_trims.client.GlowTrimsClient"
+        ],
+        "main": [
+            "tornato.glow_trims.GlowTrims"
+        ]
+    },
+    "mixins": [
+        "glow_trims.mixins.json",
+        {
+            "config": "glow_trims.client.mixins.json",
+            "environment": "client"
+        }
+    ],
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric": "*",
+        "minecraft": ">=${minecraft_version}"
+    }
+}

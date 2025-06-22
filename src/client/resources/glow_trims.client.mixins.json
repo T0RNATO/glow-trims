@@ -1,0 +1,15 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "tornato.glow_trims.client.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "client": [
+        "EquipmentRendererMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "mixins": [
+        "ArmorTrimComponentMixin"
+    ]
+}
