@@ -2,28 +2,32 @@ package tornato.glow_trims;
 
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.recipe.*;
-import net.minecraft.recipe.input.SmithingRecipeInput;
-import net.minecraft.registry.RegistryWrapper;
-
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.PlacementInfo;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import java.util.List;
 import java.util.Optional;
 
+@MethodsReturnNonnullByDefault
 public class GlowTrimRecipe implements SmithingRecipe {
     @Override
-    public ItemStack craft(SmithingRecipeInput input, RegistryWrapper.WrapperLookup registries) {
+    public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
         var out = input.base().copy();
-        out.set(GlowTrims.GLOW_TRIM_COMPONENT, this.addition.acceptsItem(Items.GLOW_INK_SAC.getRegistryEntry()));
+        out.set(GlowTrims.GLOW_TRIM_COMPONENT, this.addition.acceptsItem(Items.GLOW_INK_SAC.builtInRegistryHolder()));
         return out;
     }
 
     private final Ingredient base;
     private final Ingredient addition;
-    private IngredientPlacement placement = null;
+    private PlacementInfo placement = null;
 
     public GlowTrimRecipe(Ingredient base, Ingredient addition) {
         this.base = base;
@@ -36,25 +40,25 @@ public class GlowTrimRecipe implements SmithingRecipe {
     }
 
     @Override
-    public IngredientPlacement getIngredientPlacement() {
+    public PlacementInfo placementInfo() {
         if (this.placement == null) {
-            this.placement = IngredientPlacement.forMultipleSlots(List.of(Optional.empty(), Optional.of(this.base()), this.addition()));
+            this.placement = PlacementInfo.createFromOptionals(List.of(Optional.empty(), Optional.of(this.baseIngredient()), this.additionIngredient()));
         }
         return this.placement;
     }
 
     @Override
-    public Optional<Ingredient> template() {
+    public Optional<Ingredient> templateIngredient() {
         return Optional.empty();
     }
 
     @Override
-    public Ingredient base() {
+    public Ingredient baseIngredient() {
         return this.base;
     }
 
     @Override
-    public Optional<Ingredient> addition() {
+    public Optional<Ingredient> additionIngredient() {
         return Optional.of(addition);
     }
 
@@ -85,7 +89,7 @@ public class GlowTrimRecipe implements SmithingRecipe {
         }
 
         @Override
-        public PacketCodec<RegistryByteBuf, GlowTrimRecipe> packetCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, GlowTrimRecipe> streamCodec() {
             return null;
         }
     }

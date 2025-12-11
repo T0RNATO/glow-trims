@@ -10,9 +10,6 @@
     "icon": "assets/glow_trims/icon.png",
     "environment": "*",
     "entrypoints": {
-        "fabric-datagen": [
-            "tornato.glow_trims.client.GlowTrimsDatagen"
-        ],
         "client": [
             "tornato.glow_trims.client.GlowTrimsClient"
         ],
