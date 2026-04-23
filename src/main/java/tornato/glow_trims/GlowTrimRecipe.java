@@ -1,11 +1,8 @@
 package tornato.glow_trims;
 
+import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -19,7 +16,7 @@ import java.util.Optional;
 @MethodsReturnNonnullByDefault
 public class GlowTrimRecipe implements SmithingRecipe {
     @Override
-    public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(SmithingRecipeInput input) {
         var out = input.base().copy();
         out.set(GlowTrims.GLOW_TRIM_COMPONENT, this.addition.acceptsItem(Items.GLOW_INK_SAC.builtInRegistryHolder()));
         return out;
@@ -32,6 +29,16 @@ public class GlowTrimRecipe implements SmithingRecipe {
     public GlowTrimRecipe(Ingredient base, Ingredient addition) {
         this.base = base;
         this.addition = addition;
+    }
+
+    @Override
+    public boolean showNotification() {
+        return false;
+    }
+
+    @Override
+    public String group() {
+        return "";
     }
 
     @Override
@@ -62,37 +69,15 @@ public class GlowTrimRecipe implements SmithingRecipe {
         return Optional.of(addition);
     }
 
-//    @Override
-//    public List<RecipeDisplay> getDisplays() {
-//        return List.of(
-//                new SmithingRecipeDisplay(
-//                        Ingredient.toDisplay(Optional.empty()),
-//                        this.base.toDisplay(),
-//                        Ingredient.toDisplay(Optional.of(this.addition)),
-//                        Ingredient.toDisplay(Optional.empty()),
-//                        new SlotDisplay.ItemSlotDisplay(Items.SMITHING_TABLE)
-//                )
-//        );
-//    }
+    private static final MapCodec<GlowTrimRecipe> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                            Ingredient.CODEC.fieldOf("base").forGetter(o -> o.base),
+                            Ingredient.CODEC.fieldOf("addition").forGetter(o -> o.addition)
+                    )
+                    .apply(instance, GlowTrimRecipe::new)
+    );
 
-    public static class Serializer implements RecipeSerializer<GlowTrimRecipe> {
-        private static final MapCodec<GlowTrimRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(
-                                Ingredient.CODEC.fieldOf("base").forGetter(o -> o.base),
-                                Ingredient.CODEC.fieldOf("addition").forGetter(o -> o.addition)
-                        )
-                        .apply(instance, GlowTrimRecipe::new)
-        );
-        @Override
-        public MapCodec<GlowTrimRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, GlowTrimRecipe> streamCodec() {
-            return null;
-        }
-    }
+    public static final RecipeSerializer<GlowTrimRecipe> SERIALIZER = new RecipeSerializer<>(CODEC, null);
 }
 
 

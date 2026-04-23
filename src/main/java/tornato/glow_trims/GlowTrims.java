@@ -5,7 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 public class GlowTrims implements ModInitializer {
@@ -15,10 +15,10 @@ public class GlowTrims implements ModInitializer {
             DataComponentType.<Boolean>builder().persistent(Codec.BOOL).build()
     );
 
-    public static final RecipeSerializer<GlowTrimRecipe> GLOW_TRIM_RECIPE = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, idOf("glow_trim"), new GlowTrimRecipe.Serializer());
+    public static final RecipeSerializer<GlowTrimRecipe> GLOW_TRIM_RECIPE = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, idOf("glow_trim"), GlowTrimRecipe.SERIALIZER);
 
-    public static ResourceLocation idOf(String path) {
-        return ResourceLocation.fromNamespaceAndPath("glow_trims", path);
+    public static Identifier idOf(String path) {
+        return Identifier.fromNamespaceAndPath("glow_trims", path);
     }
 
     @Override
