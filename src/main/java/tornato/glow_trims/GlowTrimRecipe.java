@@ -1,6 +1,5 @@
 package tornato.glow_trims;
 
-import com.mojang.logging.annotations.MethodsReturnNonnullByDefault;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
@@ -10,10 +9,13 @@ import net.minecraft.world.item.crafting.PlacementInfo;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 
-@MethodsReturnNonnullByDefault
+@NotNullByDefault
 public class GlowTrimRecipe implements SmithingRecipe {
     @Override
     public ItemStack assemble(SmithingRecipeInput input) {
@@ -24,7 +26,7 @@ public class GlowTrimRecipe implements SmithingRecipe {
 
     private final Ingredient base;
     private final Ingredient addition;
-    private PlacementInfo placement = null;
+    private @Nullable PlacementInfo placement = null;
 
     public GlowTrimRecipe(Ingredient base, Ingredient addition) {
         this.base = base;
